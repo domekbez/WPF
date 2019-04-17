@@ -1,0 +1,195 @@
+﻿<Window x:Class="laby.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:laby"
+        mc:Ignorable="d"
+        Title="Employees management" Height="450" Width="800" FontSize="14">
+    <Window.Resources>
+        <Style TargetType="{x:Type  TextBlock}">
+ 
+            <Setter  Property="Margin" Value="8,0" />
+        </Style >
+        <Style TargetType="{x:Type  ComboBox}">
+
+            <Setter  Property="Margin" Value="8,0" />
+        </Style >
+
+        <Style TargetType="{x:Type  TextBox}">
+            <Setter  Property="Margin" Value="8,0" />
+        </Style >
+
+        <Style TargetType="{x:Type  Button}">
+            <Setter  Property="Margin" Value="8,0" />
+        </Style >
+     
+
+        <ObjectDataProvider x:Key="Rol" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:TypeExtension TypeName="local:Role" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="Waluty" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:TypeExtension TypeName="local:Currency" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <local:KonwerterDat  x:Key="zamianadaty" />
+        <local:ZarobkiKonwerter  x:Key="zarobkizam" />
+
+        <local:RoleWyswietl x:Key="roleee">
+            <local:RoleWyswietl.Inne>
+                <DataTemplate>
+                    <ComboBox TextOptions.TextFormattingMode="Ideal" SelectedItem="{Binding CompanyRole}" ItemsSource="{Binding Source={StaticResource Rol}}" 
+                              SelectionChanged="ComboBox_SelectionChanged" DropDownOpened="ComboBox_DropDownOpened" DropDownClosed="ComboBox_DropDownClosed">
+                    
+                    </ComboBox>
+                </DataTemplate>
+            </local:RoleWyswietl.Inne>
+            <local:RoleWyswietl.Ceow>
+                <DataTemplate>
+                    <TextBlock HorizontalAlignment="Center" Text="{Binding CompanyRole}"  />
+                </DataTemplate>
+            </local:RoleWyswietl.Ceow>
+        </local:RoleWyswietl>
+    </Window.Resources>
+    <Grid Name="gr">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.3*"/>
+            <ColumnDefinition Width="1.9*"/>
+            <ColumnDefinition Width="140"/>
+
+            <ColumnDefinition Width="*"/>
+
+
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Column="0" Grid.ColumnSpan="4">
+            <MenuItem Header="File">
+                <MenuItem Header="Open File..." Click="Openn" />
+                <MenuItem Header="Save" Click="Savee" />
+                <MenuItem Header="Save File..." Click="SaveeFile" />
+                <Separator/>
+                <MenuItem Header="Close" Click="Closee" />
+            </MenuItem>
+        </Menu>
+        <GroupBox Grid.Column="1" Grid.Row="1">
+            <ListView  Name="lv" ItemsSource="{Binding}" Grid.Row="1" SelectedIndex="0" MouseLeftButtonUp="lv_MouseLeftButtonUp">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Control.HorizontalContentAlignment"  Value="Stretch" />
+                        <Setter Property="UIElement.RenderTransformOrigin" Value="0.5,0.5" />
+                        <Setter Property="UIElement.RenderTransform">
+                            <Setter.Value>
+                                <RotateTransform x:Name="rot" />
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard>
+                                        <Storyboard Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)">
+                                            <DoubleAnimation Duration="0:0:.01" To="-2" />
+                                            <DoubleAnimation Duration="0:0:.02" BeginTime="0:0:.01" From="-2" To="2" AutoReverse="True" RepeatBehavior="2x" />
+                                            <DoubleAnimation Duration="0:0:0.01" BeginTime="0:0:0.13" To="0" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate >
+                <DataTemplate >
+                    <GroupBox Width="700">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="*"/>
+                                    <RowDefinition Height="auto"/>
+
+                                    <RowDefinition Height="*"/>
+                              
+
+                                </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="1.3*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding FirstName}" />
+                            <TextBlock Grid.Column="1" Text="{Binding LastName}" />
+                            <TextBlock Grid.Row="1" Text="Sex:" />
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Sex}" />
+                            <TextBlock Grid.Row="1" Grid.Column="2" Text="CompanyRole:" />
+
+                            <ContentControl Grid.Row="1" Grid.Column="3"  ContentTemplateSelector="{StaticResource roleee}" Content="{Binding}"/>
+
+
+                                <TextBlock Grid.Row="1" Grid.Column="4" Text="Salary:" />
+                                <TextBox Name="zarabianko" Grid.Row="1" Grid.Column="5" TextChanged="zarabianko_TextChanged">
+                                    <TextBox.Text>
+                                        <Binding Path="Salary" UpdateSourceTrigger="PropertyChanged" >
+                                            <Binding.ValidationRules>
+                                                <local:Zarobki Minimum="5000"/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                                <TextBlock Grid.Row="2" Grid.Column="5" TextBlock.Foreground="Red" 
+                                           Visibility="{Binding ElementName=zarabianko, Path=(Validation.Errors), Converter={StaticResource zarobkizam}}"
+                                           Text="{Binding ElementName=zarabianko, Path=(Validation.Errors)[0].ErrorContent}" />
+
+
+
+
+                                <TextBlock Grid.Row="3" Text="BirthDate:" />
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding BirthDate, Converter={StaticResource zamianadaty}}" />
+                            <TextBlock Grid.Row="3" Grid.Column="2" Text="BirthCountry:" />
+                            <TextBlock HorizontalAlignment="Center" Grid.Row="3" Grid.Column="3" TextTrimming="CharacterEllipsis" Text="{Binding BirthCountry}" />
+                            <TextBlock Grid.Row="3" Grid.Column="4" Text="SalaryCurrence:" />
+                            <ComboBox Grid.Row="3" Grid.Column="5" ItemsSource="{Binding Source={StaticResource Waluty}}"
+                             SelectedItem="{Binding SalaryCurrency}" SelectionChanged="ComboBox_SelectionChanged"
+                             DropDownOpened="ComboBox_DropDownOpened" DropDownClosed="ComboBox_DropDownClosed" />
+
+                        </Grid>
+                    </GroupBox>
+                    
+                </DataTemplate >
+            </ListView.ItemTemplate >
+            </ListView>
+        </GroupBox>
+        <Grid Grid.Row="1" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10"/>
+
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+
+
+            </Grid.RowDefinitions>
+            <Button Grid.Row="1" Content="↑" Click="DoGory" />
+
+            <Button Grid.Row="3" Content="↓" Click="NaDol"/>
+            <Button Grid.Row="5" Content="ADD EMPLOYEE" Click="DodajPracownika" />
+
+            <Button Grid.Row="7" Content="DELETE EMPLOYEE" Click="UsunPracownika"/>
+        </Grid>
+    </Grid>
+</Window>

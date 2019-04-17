@@ -1,0 +1,91 @@
+﻿<Window x:Class="laby.Nowy"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        
+        xmlns:local="clr-namespace:laby"
+        mc:Ignorable="d"
+        Title="Add New Employee" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Topmost="True" Height="500" Width="500" >
+    <Window.Resources>
+        <ObjectDataProvider x:Key="Rol" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:TypeExtension TypeName="local:Role" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="Waluty" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:TypeExtension TypeName="local:Currency" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="1.2*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="1.3*"/>
+                <RowDefinition Height="1.3*"/>
+                <RowDefinition Height="1.1*"/>
+                <RowDefinition Height="*"/>
+                
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+               
+
+        </Grid.ColumnDefinitions>
+        <TextBlock Margin="4" Grid.Row="1" Grid.Column="1" Text="First Name:"/>
+        <TextBox Margin="4" MaxLength="50" Name="firnam" Grid.Row="1" Grid.Column="2" Text="{Binding FirstName}" />
+
+        <TextBlock Margin="4" Grid.Row="2" Grid.Column="1" Text="Last Name:"/>
+        <TextBox Margin="4" MaxLength="50" Name="lasnam" Grid.Row="2" Grid.Column="2" Text="{Binding LastName}" />
+
+        <TextBlock Margin="4" Grid.Row="3" Grid.Column="1" Text="Sex:" VerticalAlignment="Center"/>
+        <Grid Margin="4"  Grid.Row="3" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <RadioButton Name="male" GroupName="Sex" Content="Male" />
+            <RadioButton Name="female" Grid.Row="1" GroupName="Sex" Content="Female" />
+        </Grid>
+
+
+        <TextBlock Margin="4" Grid.Row="4" Grid.Column="1" Text="Birth Date:"/>
+        <DatePicker Margin="4" Name="dat" Grid.Row="4" Grid.Column="2" SelectedDate="{Binding BirthDate}" />
+
+        <TextBlock Margin="4" Grid.Row="5" Grid.Column="1" Text="Birth Country:"/>
+        <TextBox Margin="4" MaxLength="100" Name="bircou"  Grid.Row="5" Grid.Column="2" Text="{Binding BirthCountry}"/>
+
+        <TextBlock Margin="4" Grid.Row="6" Grid.Column="1" Text="Salary:"/>
+        <TextBox Margin="4" Name="sal"  Grid.Row="6" Grid.Column="2">
+            <TextBox.Text>
+                <Binding Path="Salary" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <local:Zarobki Minimum="5000"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+                 
+
+        <TextBlock Margin="4" Grid.Row="7" Grid.Column="1" Text="Salary Currency:"/>
+        <ComboBox  Margin="8" Name="salcur" Grid.Row="7" Grid.Column="2" ItemsSource="{Binding Source={StaticResource Waluty}}" SelectedItem="{Binding SalaryCurrency}" />
+        
+
+        <TextBlock Margin="4" Grid.Row="8" Grid.Column="1" Text="Company Role:"/>
+        <ComboBox  Margin="8" Name="comrol" Grid.Row="8" Grid.Column="2" ItemsSource="{Binding Source={StaticResource Rol}}" SelectedItem="{Binding CompanyRole}" />
+
+        <Button Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Content="Add" Click="Dodawanie"/>
+    </Grid>
+</Window>
